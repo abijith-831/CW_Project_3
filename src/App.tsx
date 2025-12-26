@@ -1,35 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import LandingPage from "./Pages/LandingPage/LandingPage";
+import TeamAddingPage from "./Pages/TeamAddingPage/TeamAddingPage";
+import { resetApp } from "./redux/store";
+import "./App.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const [started, setStarted] = useState(false);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const isStarted = localStorage.getItem("tournamentStarted");
+    setStarted(isStarted === "true");
+  }, []);
+
+  const handleClear = () => {
+    dispatch(resetApp());
+    localStorage.clear();
+    setStarted(false);
+  };
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+      {started && (
+        <button onClick={handleClear} style={{ margin: "10px" }}>
+          Reset Tournament
         </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+      )}
 
-export default App
+      {started ? (
+        <LandingPage />
+      ) : (
+        <TeamAddingPage onStart={() => setStarted(true)} />
+      )}
+    </>
+  );
+};
+
+export default App;
