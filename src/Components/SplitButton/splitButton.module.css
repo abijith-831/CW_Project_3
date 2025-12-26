@@ -1,0 +1,47 @@
+.splitButtonContainer {
+  @apply flex items-stretch gap-0 rounded w-fit bg-primary-500;
+
+  .primaryButton {
+    @apply rounded;
+  }
+
+  .lineSeparator {
+    @apply h-full w-px bg-white;
+  }
+
+  .dropdownButton {
+    @apply flex items-center justify-center rounded;
+    @apply bg-primary-500 hover:bg-primary-700 active:bg-primary-800;
+    @apply text-white cursor-pointer;
+    @apply transition-colors duration-200;
+    @apply outline-none;
+    @apply focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2;
+    @apply dark:bg-primary-700 dark:hover:bg-primary-800 dark:active:bg-primary-900;
+    @apply dark:border-primary-700 dark:hover:border-primary-800 dark:active:border-primary-900;
+  }
+  
+  .dropdownButton.disabled {
+    @apply bg-gray-300 border-gray-300 cursor-not-allowed opacity-50;
+    @apply hover:bg-gray-300 hover:border-gray-300;
+    @apply dark:bg-secondary-600 dark:border-secondary-600;
+    @apply dark:hover:bg-secondary-600 dark:hover:border-secondary-600;
+  }
+}
+
+
+/* Size variants */
+.size_xs {
+  @apply px-2 py-2;
+}
+
+.size_sm {
+  @apply px-2.5 py-2.5;
+}
+
+.size_md {
+  @apply px-3 py-3;
+}
+
+.size_lg {
+  @apply px-4 py-4;
+}
