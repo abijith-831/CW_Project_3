@@ -2,6 +2,11 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "../../redux/store";
 import { addTeam, setTeams } from "../../redux/slices/TeamSlice";
+import { useForm } from "react-hook-form";
+
+type FormValues = {
+  teamName: string;
+};
 
 import SplitButton from "../../Components/SplitButton";
 import {
@@ -22,14 +27,20 @@ const TeamAddingPage = ({ onStart }: { onStart: () => void }) => {
   const teams = useSelector((state: RootState) => state.teams.teams);
   const [teamName, setTeamName] = useState("");
 
+  const { register, handleSubmit, reset, formState: { errors },} = useForm<FormValues>({ defaultValues: {   teamName: "", },});
+
   // -------------------- Add Single Team --------------------
-  const handleAddTeam = () => {
+  const onAddTeam = ({ teamName }: FormValues) => {
     const error = validateTeamAdd(teams, teamName);
-    if (error) return alert(error);
+    if (error) {
+      alert(error);
+      return;
+    }
 
     dispatch(addTeam(createTeam(teamName)));
-    setTeamName("");
+    reset(); // clear input
   };
+
 
   // -------------------- Overwrite Confirmation --------------------
   const shouldOverwriteTeams = (
@@ -104,10 +115,7 @@ const TeamAddingPage = ({ onStart }: { onStart: () => void }) => {
   ];
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center p-4 bg-cover"
-      style={{ backgroundImage: "url('bg/bg-league.jpg')" }}
-    >
+    <div  className="min-h-screen flex items-center justify-center p-4 bg-cover" style={{ backgroundImage: "url('bg/bg-league.jpg')" }}  >
       <div className="w-full max-w-lg bg-white/10 backdrop-blur-xl shadow-lg p-8">
         <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
           Cloudwick Premier League
@@ -119,22 +127,38 @@ const TeamAddingPage = ({ onStart }: { onStart: () => void }) => {
 
         {/* Add Team */}
         <div className="flex flex-col mb-6 space-y-6">
-          <input
-            type="text"
-            value={teamName}
-            onChange={(e) => setTeamName(e.target.value)}
-            placeholder="Enter team name"
-            disabled={teams.length >= MAX_TEAMS}
-            className="w-full border-2 border-gray-600 px-3 py-2 font-semibold focus:outline-none focus:ring-2 focus:ring-green-500 disabled:bg-gray-100"
-          />
+          <input  type="text"  placeholder="Enter team name"  disabled={teams.length >= MAX_TEAMS}
+              className="w-full border-2 border-gray-600 px-3 py-2 font-semibold
+                        focus:outline-none focus:ring-2 focus:ring-green-500
+                        disabled:bg-gray-100"
+              {...register("teamName", {
+                required: "Team name is required",
+                minLength: {
+                  value: 2,
+                  message: "Team name must be at least 2 characters",
+                },
+                pattern: {
+                  value: /^[A-Za-z\s]+$/, // Only letters and spaces
+                  message: "Team name can only contain letters and spaces",
+                },
+                validate: (value) =>
+                  !teams.some(
+                    (t) => t.name.toLowerCase() === value.trim().toLowerCase()
+                  ) || "Team already exists",
+              })}  />
 
-          <button
-            onClick={handleAddTeam}
-            disabled={teams.length >= MAX_TEAMS}
-            className="w-60 px-4 py-2 bg-gray-900 text-white font-semibold hover:bg-gray-700 disabled:bg-gray-400 mx-auto"
-          >
+            {errors.teamName && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.teamName.message}
+              </p>
+            )}
+
+
+
+          <button  onClick={handleSubmit(onAddTeam)}  disabled={teams.length >= MAX_TEAMS}  className="w-60 px-4 py-2 bg-gray-900 text-white font-semibold  hover:bg-gray-700 disabled:bg-gray-400 mx-auto" >
             Add Team
           </button>
+
         </div>
 
         {/* Import */}
@@ -155,8 +179,7 @@ const TeamAddingPage = ({ onStart }: { onStart: () => void }) => {
             <div className="flex justify-center">
               <button
                 onClick={handleStartTournament}
-                className="w-60 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold"
-              >
+                className="w-60 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold"  >
                 Start Tournament
               </button>
             </div>

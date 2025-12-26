@@ -28,6 +28,15 @@ export const teamSlice = createSlice({
       state.teams = action.payload;
       persist(state.teams);
     },
+    // match draw
+    incrementPlayed(state, action: PayloadAction<{ teamIds: string[] }>) {
+      action.payload.teamIds.forEach(id => {
+        const team = state.teams.find(t => t.id === id);
+        if (team) {
+          team.played += 1;
+        }
+      });
+    },
 
     /* -------------------- UPDATE -------------------- */
     updateTeam: (
@@ -58,6 +67,7 @@ export const teamSlice = createSlice({
 export const {
   addTeam,
   setTeams,
+  incrementPlayed,
   updateTeam,
   removeTeam,
   clearTeams,
