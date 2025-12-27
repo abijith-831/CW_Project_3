@@ -2,6 +2,7 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import teamsReducer from "./slices/TeamSlice";
+import roundsReducer from './slices/RoundsSlice'
 
 /* ---------------- persist config ---------------- */
 const persistConfig = {
@@ -12,6 +13,7 @@ const persistConfig = {
 /* ---------------- root reducer ---------------- */
 const appReducer = combineReducers({
   teams: teamsReducer,
+  rounds: roundsReducer
 });
 
 /* 🔥 global reset handler */

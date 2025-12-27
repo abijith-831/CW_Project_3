@@ -22,8 +22,10 @@ const App = () => {
 
   return (
     <>
+    <div className="font-Gabarito">
+      
       {started && (
-        <button onClick={handleClear} style={{ margin: "10px" }}>
+        <button className="absolute left-12 top-4" onClick={handleClear} style={{ margin: "10px" }}>
           Reset Tournament
         </button>
       )}
@@ -33,6 +35,7 @@ const App = () => {
       ) : (
         <TeamAddingPage onStart={() => setStarted(true)} />
       )}
+      </div>
     </>
   );
 };
