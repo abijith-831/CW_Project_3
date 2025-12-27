@@ -152,13 +152,12 @@ const handleSubmitScore = (
     dispatch(addRound(nextRound));
   }, [rounds, teams, dispatch]);
 
-  console.log('rounds redux',rounds);
   
 
   /* -------------------- UI -------------------- */
   return (
     <div className="p-6">
-      <h1 className="text-3xl text-neutral-200 font-bold mb-6 text-center">Tournament Bracket</h1>
+      <h1 className="text-3xl   mb-6 text-center">Tournament Bracket</h1>
 
       <div className="flex gap-20 overflow-x-auto bg-black/70 py-6 px-12">
         {rounds.map((round) => (
